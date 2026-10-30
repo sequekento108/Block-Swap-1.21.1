@@ -9,8 +9,16 @@ import net.minecraft.world.level.chunk.ImposterProtoChunk;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.ProtoChunk;
 
+import java.nio.file.Path;
+
 public class BlockSwap {
     public static final String MOD_ID = "blockswap";
+
+    public static Path CONFIG_PATH = null;
+
+    public static void init(Path configPath) {
+        CONFIG_PATH = configPath;
+    }
 
     public static final TrackedDataKey<BlockSwapLevelChunkData> BLOCK_SWAP_CHUNK_DATA = TrackedDataRegistries.CHUNK.register(
             id("block_swap_level_data"),

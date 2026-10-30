@@ -1,7 +1,9 @@
 package dev.corgitaco.blockswap.swappredicate;
 
+import dev.corgitaco.blockswap.util.BiomeAccess;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 
@@ -17,10 +19,11 @@ public record BiomeTempExceedsBlockSwapPredicate(float temp, boolean useBaseTemp
     public boolean test(Level level, ChunkAccess chunk, int localX, int localY, int localZ, BlockState lastState) {
 
         if (useBaseTemperature) {
-            return getBiome(level, chunk, localX, localY, localZ, POS::get, this.useFiddle).value().getBaseTemperature() > temp;
+            return getBiome(level, chunk, localX, localY, localZ, POS_SUPPLIER, this.useFiddle).value().getBaseTemperature() > temp;
         } else {
             BlockPos.MutableBlockPos mutableBlockPos = POS.get();
-            return getBiome(level, chunk, localX, localY, localZ, POS_SUPPLIER, this.useFiddle).value().getTemperature(mutableBlockPos) > temp;
+            Biome biome = getBiome(level, chunk, localX, localY, localZ, POS_SUPPLIER, this.useFiddle).value();
+            return BiomeAccess.getTemperature(biome, mutableBlockPos) > temp;
         }
     }
 }

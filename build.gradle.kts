@@ -16,6 +16,8 @@ repositories {
 
         mavenFabric()
         mavenNeoforged()
+        mavenForge()
+        maven("https://maven.neoforged.net/mojang-meta/")
     }
 }
 
@@ -33,11 +35,17 @@ cloche {
             required = true
             version("2.0.0.3")
         }
+        dependency {
+            modId = "corgilib"
+            required = true
+            version("5.0.0.4")
+        }
     }
 
     common {
         dependencies {
             compileOnly("io.github.llamalad7:mixinextras-fabric:${project.properties["mixinextras_version"]}")
+            implementation("corgitaco.corgilib:Corgilib-NeoForge:${project.properties["corgilib_version"]}")
         }
     }
 
@@ -74,6 +82,7 @@ cloche {
 
         dependencies {
             modApi("dev.corgitaco:Data_Anchor-neoforge-${minecraftVersion.get()}:${project.properties["data_anchor_version"]}")
+            modApi("corgitaco.corgilib:Corgilib-NeoForge:${project.properties["corgilib_version"]}")
         }
     }
 

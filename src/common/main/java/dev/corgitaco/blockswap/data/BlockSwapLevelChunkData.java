@@ -1,27 +1,23 @@
 package dev.corgitaco.blockswap.data;
 
+import dev.corgitaco.blockswap.config.BlockSwapConfig;
+import dev.corgitaco.blockswap.swapper.Swapper;
 import dev.corgitaco.dataanchor.data.registry.TrackedDataKey;
 import dev.corgitaco.dataanchor.data.type.chunk.ChunkBlockStateInterceptor;
 import dev.corgitaco.dataanchor.data.type.chunk.LevelChunkTrackedData;
 import dev.corgitaco.dataanchor.data.type.chunk.ServerLevelChunkTrackedData;
 import dev.corgitaco.dataanchor.data.type.chunk.SyncedLevelChunkTrackedData;
-import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 public class BlockSwapLevelChunkData extends ServerLevelChunkTrackedData implements ChunkBlockStateInterceptor {
 
     private final Set<String> placeHolders = new HashSet<>();
-
-    Map<BlockState, BlockState> blockStateMap = Util.make(new Reference2ReferenceOpenHashMap<>(), map -> map.put(Blocks.STONE.defaultBlockState(), Blocks.WATER.defaultBlockState()));
 
 
     public BlockSwapLevelChunkData(TrackedDataKey<? extends LevelChunkTrackedData> trackedDataKey, LevelChunk levelChunk) {
@@ -39,8 +35,12 @@ public class BlockSwapLevelChunkData extends ServerLevelChunkTrackedData impleme
     }
 
     @Override
-    public BlockState getNewState(BlockPos blockPos, BlockState blockState, BlockState blockState1, boolean b) {
-        return blockStateMap.getOrDefault(blockState, blockState1);
+    public BlockState getNewState(BlockPos blockPos, BlockState originalState, BlockState currentState, boolean b) {
+        BlockSwapConfig config = BlockSwapConfig.getConfig(false);
+        if (config.contains(originalState)) {
+            return Swapper.remapState(originalState);
+        }
+        return currentState;
     }
 
     public Set<String> getPlaceHolders() {

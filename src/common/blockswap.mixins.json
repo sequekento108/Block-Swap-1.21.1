@@ -6,7 +6,13 @@
   "client": [
   ],
   "mixins": [
-    "LevelChunkSectionMixin"
+    "BiomeMixin",
+    "LevelChunkSectionMixin",
+    "MixinChunkHolder",
+    "MixinChunkSerializer",
+    "MixinLevelChunk",
+    "MixinMinecraftServer",
+    "access.StateHolderAccess"
   ],
   "injectors": {
     "defaultRequire": 1
